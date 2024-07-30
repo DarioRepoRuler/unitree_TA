@@ -8,4 +8,4 @@ setup(name='unitree_TA',
       packages=find_packages(),
       author_email='support@unitree.com',
       description='Template RL environments for Unitree Robots',
-      install_requires=['isaacgym', 'matplotlib', 'numpy==1.20', 'tensorboard'])
+      install_requires=['isaacgym', 'matplotlib', 'numpy>=1.20', 'tensorboard'])
