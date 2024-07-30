@@ -22,16 +22,12 @@ conda activate unitree_TA
    - `cd isaacgym/python && pip install -e .`
    - Try running an example `cd examples && python 1080_balls_of_solitude.py`
    - For troubleshooting check docs isaacgym/docs/index.html
-4. Install rsl_rl (PPO implementation)
 
-   - Clone [https://github.com/leggedrobotics/rsl_rl](https://github.com/leggedrobotics/rsl_rl)
-   - `cd rsl_rl && git checkout v1.0.2 && pip install -e .`
-
-5. Install unitree_rl_gym
+4. Install unitree_rl_gym
 
    - Navigate to the folder `unitree_rl_gym`
    - `pip install -e .`
-6. Clarify path `export LD_LIBRARY_PATH=~/miniconda3/envs/rlgpu/lib `
+5. Clarify path `export LD_LIBRARY_PATH=~/miniconda3/envs/rlgpu/lib `
 
 ### Usage
 
