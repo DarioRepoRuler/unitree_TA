@@ -2,7 +2,7 @@ from .base_config import BaseConfig
 
 class LeggedRobotCfg(BaseConfig):
     class env:
-        num_envs = 4096
+        num_envs = 40
         num_observations = 48
         num_privileged_obs = None # if not None a priviledge_obs_buf will be returned by step() (critic obs for assymetric training). None is returned otherwise 
         num_actions = 12
@@ -12,9 +12,9 @@ class LeggedRobotCfg(BaseConfig):
         test = False
 
     class terrain:
-        mesh_type = 'plane' # "heightfield" # none, plane, heightfield or trimesh
+        mesh_type = 'heightfield' # "heightfield" # none, plane, heightfield or trimesh
         horizontal_scale = 0.1 # [m]
-        vertical_scale = 0.005 # [m]
+        vertical_scale = 0.1 # [m]
         border_size = 25 # [m]
         curriculum = True
         static_friction = 1.0

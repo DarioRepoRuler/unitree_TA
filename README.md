@@ -5,6 +5,11 @@ This is a simple example of using Unitree Robots for reinforcement learning, inc
 ### Installation
 
 1. Create a new python virtual env with python 3.6, 3.7 or 3.8 (3.8 recommended)
+```
+conda create -n unitree_TA python==3.8
+conda activate unitree_TA
+```
+
 2. Install pytorch 1.10 with cuda-11.3:
 
    ```
