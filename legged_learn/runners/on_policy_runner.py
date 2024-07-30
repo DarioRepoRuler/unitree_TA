@@ -81,7 +81,7 @@ class OnPolicyRunner:
 
         _, _ = self.env.reset()
     
-    def learn(self, num_learning_iterations, init_at_random_ep_len=False):
+    def learn(self, num_learning_iterations, init_at_random_ep_len=False, wandb_logger=None):
         # initialize writer
         if self.log_dir is not None and self.writer is None:
             self.writer = SummaryWriter(log_dir=self.log_dir, flush_secs=10)
@@ -132,19 +132,40 @@ class OnPolicyRunner:
                 # Learning step
                 start = stop
                 self.alg.compute_returns(critic_obs)
-            #print(f"Episode infos: {ep_infos}")
-            #print(f"Length of ep_infos: {len(ep_infos)}")
+
             mean_value_loss, mean_surrogate_loss = self.alg.update()
+
             stop = time.time()
             learn_time = stop - start
             if self.log_dir is not None:
                 self.log(locals())
+                if wandb_logger is not None:
+                    wandb_logger.log({'action/std': self.alg.actor_critic.std.mean()}, step=it)
+                    losses = {'mean_value_loss': mean_value_loss, 'mean_surrogate_loss': mean_surrogate_loss}
+                    for key in losses.keys():
+                        wandb_logger.log({f"losses/{key}": losses[key]}, step=it)
+                self.wandb_log(locals(), wandb_logger, it)
             if it % self.save_interval == 0:
                 self.save(os.path.join(self.log_dir, 'model_{}.pt'.format(it)))
             ep_infos.clear()
         
         self.current_learning_iteration += num_learning_iterations
         self.save(os.path.join(self.log_dir, 'model_{}.pt'.format(self.current_learning_iteration)))
+
+    def wandb_log(self, locs, wandb_logger, it):
+        mean_rewards = torch.zeros(len(self.env.reward_names), device=self.device)
+        for ep_info in locs['ep_infos']:
+            for i, key in enumerate(self.env.reward_names):
+                mean_rewards[i] += ep_info[f"rew_{key}"][0]
+        mean_rewards /= len(locs['ep_infos'])
+        mean_rewards_dict = {f"rew_{key}": mean_rewards[i] for i, key in enumerate(self.env.reward_names)}
+        
+        for key in mean_rewards_dict.keys():
+            if 'rew' in key:
+                wandb_logger.log({f'train/reward/{key}': mean_rewards_dict[key]}, step=it)
+        
+        wandb_logger.log({f'train/reward/rew_total':statistics.mean(locs['rewbuffer'])}, step=it)
+
 
     def log(self, locs, width=80, pad=35):
         self.tot_timesteps += self.num_steps_per_env * self.env.num_envs

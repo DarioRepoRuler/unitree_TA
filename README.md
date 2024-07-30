@@ -31,6 +31,7 @@ conda activate unitree_TA
 
    - Navigate to the folder `unitree_rl_gym`
    - `pip install -e .`
+6. Clarify path `export LD_LIBRARY_PATH=~/miniconda3/envs/rlgpu/lib `
 
 ### Usage
 
